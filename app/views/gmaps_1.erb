@@ -1,0 +1,29 @@
+
+<h1>GMaps - Exercise 1</h1>
+<br />
+<div id="map" style="min-width: 600px; min-height: 600px;"></div>
+<br /><br />
+<script type="text/javascript">
+	function initMap() {
+	  var theirLatLng = {lat: -25.363, lng: 131.044};
+	  var myLatLng = {lat: 49.2820, lng: -123.1171};
+	  var map = new google.maps.Map(document.getElementById('map'), {
+	    center: {lat: 49.2827, lng: -123.1207},
+	    zoom: 12
+	  });
+	  var theirMarker = new google.maps.Marker({
+	    position: theirLatLng,
+	    map: map,
+	    title: 'Hello World!'
+	  });
+	  var myMarker = new google.maps.Marker({
+	    position: myLatLng,
+	    map: map,
+	    animation: google.maps.Animation.DROP,
+	    title: 'Vancouver'
+	  });
+	}
+</script>  
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbD_DJTXLyK3IpRu0BZFOyxPYDcMu5bGk&callback=initMap">
+</script>
