@@ -10,3 +10,7 @@ end
 get '/gmaps_2' do
   erb :gmaps_2
 end
+
+get '/gmaps_mashup' do
+  erb :gmaps_mashup
+end

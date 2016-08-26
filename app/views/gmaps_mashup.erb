@@ -1,0 +1,108 @@
+
+<h1>GMaps - Mashup Project (CR)</h1>
+<div class="row">
+
+  <div class="col-md-9">
+    <br />
+    <br />
+    <div id="map" style="width: 800px; height: 600px;"></div>
+    <br />
+  </div>
+
+  <div class="col-md-3">
+    <br />
+    <h1>Marked Places</h1>
+    <div id="MarkerList">
+    </div>
+  </div>
+
+  </div>
+</div>
+
+
+
+<script>
+  // Note: This example requires that you consent to location sharing when
+  // prompted by your browser. If you see the error "The Geolocation service
+  // failed.", it means you probably did not give permission for the browser to
+  // locate you.
+  var gmarkers1 = [];
+  var markers1 = [];
+  
+  markers1 = [
+    ['0', 'English Bay', 49.286621, -123.163348],
+    ['1', '574 Granvill Street', 49.283519, -123.115415],
+    ['2', '333 Terminal Ave', 49.272415, -123.095843],
+    ['3', '715 Kingsway', 49.256037, -123.087897]
+  ];
+
+// Load all markers on page
+
+  for(i = 0; i < markers1.length; i++){
+    marker = markers1[i];
+    $("#MarkerList").append('<input type="checkbox" checked="true" name="' 
+      + marker[1] + '" id="' + marker[0] + '">  <label for="id' 
+      + i + '">' + marker[1] + '</label><br>');
+  } 
+
+// ===================
+  
+  function initMap() {
+    var infowindow = new google.maps.InfoWindow({content:''});
+    var myLatLng = {lat: 49.2820, lng: -123.1171};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 49.2827, lng: -123.1207},
+      zoom: 12
+    });
+
+    for (i = 0; i < markers1.length; i++) {
+        addMarker(markers1[i]);
+    }
+
+    function addMarker(marker) {
+        var title = marker[1];
+        var pos = new google.maps.LatLng(marker[2], marker[3]);
+        var content = marker[1];
+
+        marker1 = new google.maps.Marker({
+            title: title,
+            position: pos,
+            map: map
+        });
+
+        gmarkers1.push(marker1);
+
+        // Marker click listener
+        google.maps.event.addListener(marker1, 'click', (function (marker1, content) {
+            return function () {
+                console.log('Gmarker 1 gets pushed');
+                infowindow.setContent(content);
+                infowindow.open(map, marker1);
+                map.panTo(this.getPosition());
+                map.setZoom(12);
+            }
+        })(marker1, content));
+    }
+
+
+// ========= filtering Markers =====
+  $('#MarkerList :checkbox').click(function() {
+    var item = $('div#MarkerList input[type=checkbox]');
+    for (i = 0; i < item.length; i++) {
+      marker = gmarkers1[i];
+        if (item[i].checked) {
+          marker.setVisible(true);
+        } else {
+          marker.setVisible(false);
+        }
+    }       
+  });
+
+
+  }
+
+  
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbD_DJTXLyK3IpRu0BZFOyxPYDcMu5bGk&callback=initMap">
+</script>
