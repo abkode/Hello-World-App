@@ -14,6 +14,10 @@
     <h1>Marked Places</h1>
     <div id="MarkerList">
     </div>
+    <br>
+    <div id="divImages">
+
+    </div>
   </div>
 
   </div>
@@ -22,21 +26,43 @@
 
 
 <script>
-  // Note: This example requires that you consent to location sharing when
-  // prompted by your browser. If you see the error "The Geolocation service
-  // failed.", it means you probably did not give permission for the browser to
-  // locate you.
+
+  _500px.init({
+    sdk_key: 'SDK_Key'
+  });
+
+  function GetPhotos(lat, lng, radius){
+
+    $('#divImages > img').remove();
+  
+    var geoInfo = lat.toString() + ', ' + lng.toString() + ', ' + radius.toString();
+
+    // _500px.api('/photos/search', { geo: '49.286621, -123.163348, 1km', image_size: 600 }, function (response) {  
+    _500px.api('/photos/search', { geo: geoInfo, image_size: 200 }, function (response) {  
+        // for (var i = 0; i < response.data.photos.length; i++){
+        for (var i = 0; i < 5; i++){
+          $('#divImages').append('<img src=' + response.data.photos[i].image_url + ' />')
+        }
+    });
+
+  };
+
+  
   var gmarkers1 = [];
   var markers1 = [];
+  imageUrl = []
   
   markers1 = [
-    ['0', 'English Bay', 49.286621, -123.163348],
+    ['0', "English Bay", 49.286621, -123.163348],
     ['1', '574 Granvill Street', 49.283519, -123.115415],
     ['2', '333 Terminal Ave', 49.272415, -123.095843],
-    ['3', '715 Kingsway', 49.256037, -123.087897]
+    ['3', '715 Kingsway', 49.256037, -123.087897],
+    ['4', 'Stanley Park', 49.3017, -123.1417],
+    ['5', 'University of British Columbia', 49.261193, -123.248730],
+    ['6', 'H. R. MacMillan Space Centre', 49.276346, -123.144407]
+
   ];
 
-// Load all markers on page
 
   for(i = 0; i < markers1.length; i++){
     marker = markers1[i];
@@ -44,8 +70,6 @@
       + marker[1] + '" id="' + marker[0] + '">  <label for="id' 
       + i + '">' + marker[1] + '</label><br>');
   } 
-
-// ===================
   
   function initMap() {
     var infowindow = new google.maps.InfoWindow({content:''});
@@ -72,7 +96,6 @@
 
         gmarkers1.push(marker1);
 
-        // Marker click listener
         google.maps.event.addListener(marker1, 'click', (function (marker1, content) {
             return function () {
                 console.log('Gmarker 1 gets pushed');
@@ -80,24 +103,27 @@
                 infowindow.open(map, marker1);
                 map.panTo(this.getPosition());
                 map.setZoom(12);
+                GetPhotos(marker[2], marker[3], '1km');                
             }
         })(marker1, content));
     }
 
+    google.maps.event.addListener(infowindow, "closeclick", function(){
+      $('#divImages > img').remove();
+    });
 
-// ========= filtering Markers =====
-  $('#MarkerList :checkbox').click(function() {
-    var item = $('div#MarkerList input[type=checkbox]');
-    for (i = 0; i < item.length; i++) {
-      marker = gmarkers1[i];
-        if (item[i].checked) {
-          marker.setVisible(true);
-        } else {
-          marker.setVisible(false);
-        }
-    }       
-  });
-
+    // ========= filtering Markers =====
+    $('#MarkerList :checkbox').click(function() {
+      var item = $('div#MarkerList input[type=checkbox]');
+      for (i = 0; i < item.length; i++) {
+        marker = gmarkers1[i];
+          if (item[i].checked) {
+            marker.setVisible(true);
+          } else {
+            marker.setVisible(false);
+          }
+      }       
+    });
 
   }
 
